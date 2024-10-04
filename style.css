@@ -1,0 +1,118 @@
+@import url('https://fonts.googleapis.com/css2?family=Girassol&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Girassol", serif;
+}
+
+body {
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.menu-container {
+    width: 50%;
+    max-width: 1200px;
+    background-color: #1c1c1c;
+    padding: 40px;
+    border: 2px solid #fff;
+}
+
+.menu-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.menu-header img {
+    width: 200px;
+    filter: invert(100%);
+
+}
+
+.menu-header h1 {
+    font-size: 48px;
+    margin: 20px 0;
+    letter-spacing: 5px;
+}
+
+.menu-section {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.menu-category {
+    width: 45%;
+    margin-bottom: 30px;
+}
+
+.menu-category h2 {
+    font-size: 24px;
+    border-bottom: 2px solid #fff;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.menu-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.menu-item p {
+    font-size: 20px;
+    margin: 0;
+}
+
+.menu-item span {
+    font-size: 14px;
+    display: block;
+    margin-top: 5px;
+    opacity: 0.8;
+}
+.menu-item-title{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+button{
+    width: 50%;
+    background-color: transparent;
+    color: white;
+    border: 1px solid white;
+    font-size: 17px;
+    margin-top: 10px;
+}
+button:active{
+    background-color: white;
+    color: #1c1c1c;
+}
+form{
+    width: 100%;
+}
+@media only screen and (max-width: 767px){
+    .menu-container{
+        height: auto;
+        width: 100%;
+    }
+body{
+    height: auto;
+}
+.menu-section{
+    flex-direction: column;
+}
+.menu-category{
+    width: 100%;
+}
+
+}
