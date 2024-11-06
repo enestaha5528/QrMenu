@@ -66,7 +66,7 @@ INSERT INTO `urunler` (`id`, `urun_ad`, `urun_fiyat`, `urun_aciklama`, `urun_kat
 (1, 'Humus', 176, 'Yoğun kıvamlı nohut püresi, tahin, sarımsak ve zeytinyağı ile hazırlanmış humus.', 'baslangic'),
 (2, 'Muhammara', 150, 'Kırmızı biber, ceviz, sarımsak ve nar ekşisiyle yapılmış lezzetli bir acılı biber ezmesi.', 'baslangic'),
 (3, 'Sigara Böreği', 170, 'İnce yufka içinde peynir, ıspanak veya kıyma ile hazırlanan nefis börekler.', 'baslangic'),
-(4, 'İçli Köfte (5\'Li)', 200, 'İç harcıyla doldurulmuş, baharatlı bulgurun sarıldığı nefis içli köfteler.', 'arasicak'),
+(4, 'İçli Köfte (5 Li)', 200, 'İç harcıyla doldurulmuş, baharatlı bulgurun sarıldığı nefis içli köfteler.', 'arasicak'),
 (5, 'Mücver', 100, 'Kabak, havuç ve patatesin rendelenip kızartılmasıyla yapılan hafif ve nefis mücver.', 'arasicak'),
 (6, 'Paçanga Böreği', 125, 'Pastırma ve kaşar peyniri içeren ince yufka ile hazırlanan lezzetli bir börek.', 'arasicak'),
 (7, 'İskender', 245, 'Döner etin üzerine sıcak tereyağı ve yoğurt sosu ile servis edilir.', 'anayemek'),
