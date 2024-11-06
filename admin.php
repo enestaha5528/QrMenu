@@ -1,8 +1,11 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "qrmenu";
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+$servername = "localhost"; 
+$username = "root"; 
+$password = ""; 
+$dbname = "qrmenu"; 
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -19,6 +22,20 @@ if ($result->num_rows > 0) {
         $siparisler[$row['masa_numarasi']][] = $row;
     }
 }
+
+if (isset($_POST['siparis_tamamlandi'])) {
+    $masa_numarasi = $_POST['masa_numarasi'];
+    $sql = "DELETE FROM siparisler WHERE masa_numarasi = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $masa_numarasi);
+    $stmt->execute();
+    $stmt->close();
+
+    header("Location: admin.php");
+    exit;
+}
+
+$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -28,120 +45,203 @@ if ($result->num_rows > 0) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="img/enes.png" type="image/x-icon" />
     <title>Admin Sayfası</title>
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Girassol&display=swap');
+
         body {
             font-family: "Girassol", serif;
             margin: 0;
             padding: 20px;
-            background-color: #333;
-            color:white;
+            background-color: #222; 
+            color: #f0f0f0; 
         }
-        .admincont{
+
+        .admincont {
             padding: 30px;
-            background-color:#1c1c1c;
+            margin-top:100px;
+            background-color: #333; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); 
         }
-       
+
+        h1, h2 {
+            color: white; 
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
+            background-color: #444; 
         }
+
         th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
+            border: 1px solid white; 
+            padding: 12px; 
             text-align: left;
         }
+
         th {
-            color: white;
+            color: white; 
         }
+
         .tamamla-btn {
-            background-color: #4CAF50;
+            background-color: #28a745;
             color: white;
             border: none;
-            padding: 5px 10px;
+            padding: 8px 12px;
             border-radius: 5px;
-           
-           
             cursor: pointer;
+            transition: background-color 0.3s;
         }
+
         .tamamla-btn:hover {
-            background-color: #45a049;
+            background-color: #218838;
         }
+
         .masa-numarasi {
             font-weight: bold;
-            font-size: 20px;
+            font-size: 22px;
             margin-top: 20px;
+            color: white; 
         }
+
         .toplu-tamamla-btn {
             margin-top: 10px;
         }
+
         .total-sum {
             font-weight: bold;
             text-align: left;
             padding: 8px;
+            background-color: #555; 
+        }
+
+        .navbar{
+            width: 100%;
+            background-color: #333;
+            display:flex;
+        }
+
+        .admin{
+            width: 50%;
+            height:10vh;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            background-color:#2c2c2c;
+        }
+
+        .urun{
+            width: 50%;
+            height:10vh;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+        }
+
+        .urun:hover{
+            background-color:#2c2c2c;
+        }
+        .log{
+            width: 50%;
+            height:10vh;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+        }
+
+        .log:hover{
+            background-color:#2c2c2c;
+        }
+        a{
+            text-decoration:none;
+        }
+
+        @media only screen and (max-width: 767px){
+            #siparisler{
+                font-size:10px;
+            }
+            a{
+                font-size:10px
+            }
+            table{
+                font-size:10px;
+            }
         }
     </style>
 </head>
 <body>
-<div class="admincont">
-    <h1>Tüm Siparişler</h1>
-
-    <?php foreach ($siparisler as $masa_numarasi => $siparisler_listesi): ?>
-        <div class="masa-numarasi">Masa Numarası: <?php echo htmlspecialchars($masa_numarasi); ?></div>
-        <table>
-            <tr>
-                <th>ID</th>
-                <th>Ürün Adı</th>
-                <th>Fiyat (TL)</th>
-                <th>Miktar</th>
-                <th>Toplam Fiyat (TL)</th>
-                <th>Tarih</th>
-            </tr>
-            <?php 
-            $masa_toplam_fiyat = 0;
-            foreach ($siparisler_listesi as $siparis): 
-                $toplam_fiyat = $siparis['urun_fiyat'] * $siparis['miktar'];
-                $masa_toplam_fiyat += $toplam_fiyat;
-            ?>
-                <tr>
-                    <td><?php echo $siparis['id']; ?></td>
-                    <td><?php echo htmlspecialchars($siparis['urun_ad']); ?></td>
-                    <td><?php echo htmlspecialchars($siparis['urun_fiyat']); ?> TL</td>
-                    <td><?php echo htmlspecialchars($siparis['miktar']); ?></td>
-                    <td><?php echo $toplam_fiyat; ?> TL</td>
-                    <td><?php echo isset($siparis['created_at']) ? htmlspecialchars($siparis['created_at']) : 'Tarih mevcut değil'; ?></td>
-                </tr>
-            <?php endforeach; ?>
-            <tr>
-                <td colspan="4" class="total-sum">Masa Toplamı: <?php echo $masa_toplam_fiyat; ?> TL</td>
-            </tr>
-        </table>
-        <form method="post" class="toplu-tamamla-btn">
-            <input type="hidden" name="masa_numarasi" value="<?php echo $masa_numarasi; ?>">
-            <button type="submit" name="siparis_tamamlandi" class="tamamla-btn">Bu Masadaki Tüm Siparişleri Tamamla</button>
-        </form>
-        <?php endforeach; ?>
+    <div class="navbar">
+        <div class="admin">
+            <a href="admin.php"><h1>SIPARISLER</h1></a>
+        </div>
+        <div class="urun">
+            <a href="urun_yonet.php"><h1>URUNLER</h1></a>
+        </div>
+        <div class="log">
+            <a href="siparis_log.php"><h1>LOGLAR</h1></a>
+        </div>
+    </div>
+    <div class="admincont">
+        <h1>Tüm Siparişler</h1>
+        <div id="siparisler"></div>
         <?php if (empty($siparisler)): ?>
             <p>Sipariş bulunmamaktadır.</p>
         <?php endif; ?>
-        <?php
-        if (isset($_POST['siparis_tamamlandi'])) {
-            $masa_numarasi = $_POST['masa_numarasi'];
-            $sql = "DELETE FROM siparisler WHERE masa_numarasi = ?";
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param("s", $masa_numarasi);
-            $stmt->execute();
-            $stmt->close();
+    </div>
 
-            header("Location: admin.php");
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        function getOrders() {
+            var lastSiparisCount = 0; 
+            var currentSiparisCount = 0;
+            $.ajax({
+                url: 'getOrders.php',
+                type: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    var siparislerHtml = '';
+                    currentSiparisCount = 0; 
+                    
+                    $.each(response, function(masa_numarasi, siparisler_listesi) {
+                        currentSiparisCount += siparisler_listesi.length; 
+                        
+                        siparislerHtml += '<div class="masa-numarasi">Masa Numarası: ' + masa_numarasi + '</div>';
+                        siparislerHtml += '<table>';
+                        siparislerHtml += '<tr><th>ID</th><th>Ürün Adı</th><th>Fiyat (TL)</th><th>Miktar</th><th>Toplam Fiyat (TL)</th><th>Tarih</th></tr>';
+                        
+                        var masa_toplam_fiyat = 0;
+                        $.each(siparisler_listesi, function(index, siparis) {
+                            var toplam_fiyat = siparis.urun_fiyat * siparis.miktar;
+                            masa_toplam_fiyat += toplam_fiyat;
+                            siparislerHtml += '<tr>';
+                            siparislerHtml += '<td>' + siparis.id + '</td>';
+                            siparislerHtml += '<td>' + siparis.urun_ad + '</td>';
+                            siparislerHtml += '<td>' + siparis.urun_fiyat + ' TL</td>';
+                            siparislerHtml += '<td>' + siparis.miktar + '</td>';
+                            siparislerHtml += '<td>' + toplam_fiyat + ' TL</td>';
+                            siparislerHtml += '<td>' + (siparis.created_at || 'Tarih mevcut değil') + '</td>';
+                            siparislerHtml += '</tr>';
+                        });
+                        siparislerHtml += '<tr><td colspan="4" class="total-sum">Masa Toplamı: ' + masa_toplam_fiyat + ' TL</td></tr>';
+                        siparislerHtml += '</table>';
+                        siparislerHtml += '<form method="post" class="toplu-tamamla-btn">';
+                        siparislerHtml += '<input type="hidden" name="masa_numarasi" value="' + masa_numarasi + '">';
+                        siparislerHtml += '<button type="submit" name="siparis_tamamlandi" class="tamamla-btn">Bu Masadaki Tüm Siparişleri Tamamla</button>';
+                        siparislerHtml += '</form>';
+                    });
+                    $('#siparisler').html(siparislerHtml);
+                    lastSiparisCount = currentSiparisCount;
+                }
+            });
         }
 
-        $conn->close();
-        ?>
-</div>
-
-
-
+        getOrders();
+        setInterval(function() {
+            getOrders();
+        }, 1000);
+    </script>
 </body>
 </html>

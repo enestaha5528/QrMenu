@@ -20,9 +20,10 @@ body {
 .menu-container {
     width: 50%;
     max-width: 1200px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 20px;
     background-color: #1c1c1c;
     padding: 40px;
-    border: 2px solid #fff;
 }
 
 .menu-header {
@@ -95,18 +96,30 @@ button{
 }
 button:active{
     background-color: white;
-    color: #1c1c1c;
 }
 form{
     width: 100%;
+}
+.fkf{
+    background-color: #838183;
+}
+.garsoncagir{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 @media only screen and (max-width: 767px){
     .menu-container{
         height: auto;
         width: 100%;
+        padding:10px;
+        border: none;
+        border-radius: 0;
     }
 body{
     height: auto;
+    padding: 0;
 }
 .menu-section{
     flex-direction: column;
