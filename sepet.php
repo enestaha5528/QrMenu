@@ -89,14 +89,14 @@ h1 {
 
 .sepet-item {
     border-bottom: 1px solid #444;
-    padding: 10px 0;
+    padding: 25px 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.sepet-item:last-child {
-    border-bottom: none; 
+.sepet-item:first-child {
+    border-top: 1px solid #444;
 }
 a{
     color:white;
@@ -146,8 +146,15 @@ a{
 .sepet-item-id{
     width: 40%;
 }
+.sepet-islem-arttir-azalt{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 .sepet-islem{
-    display:flex;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 @media only screen and (max-width: 767px) {
     .sepet-container {
@@ -162,7 +169,15 @@ a{
         width: 100%;
     }
     .butonlar{
-        width: 30%;
+        width: 31%;
+    }
+    .sil{
+    padding-top: 20px;
+}
+    .sepet-islem{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
     }
 }
     </style>
@@ -186,18 +201,20 @@ a{
                         <p><?php echo htmlspecialchars($item['fiyat']); ?> TL</p>
                     </div>
                     <div class="sepet-islem">
-                        <form method="post" style="display:inline;">
-                            <input type="hidden" name="index" value="<?php echo $index; ?>">
-                            <input type="hidden" name="action" value="azalt">
-                            <button type="submit" class="miktar-btn">-</button>
-                        </form>
-                        <span><?php echo $item['miktar']; ?></span>
-                        <form method="post" style="display:inline;">
-                            <input type="hidden" name="index" value="<?php echo $index; ?>">
-                            <input type="hidden" name="action" value="arttir">
-                            <button type="submit" class="miktar-btn">+</button>
-                        </form>
-                        <form method="post" style="display:inline;">
+                       <div class="sepet-islem-arttir-azalt" style="display:flex;">
+                            <form method="post" style="display:inline;">
+                                <input type="hidden" name="index" value="<?php echo $index; ?>">
+                                <input type="hidden" name="action" value="azalt">
+                                <button type="submit" class="miktar-btn">-</button>
+                            </form>
+                            <span><?php echo $item['miktar']; ?></span>
+                            <form method="post" style="display:inline;">
+                                <input type="hidden" name="index" value="<?php echo $index; ?>">
+                                <input type="hidden" name="action" value="arttir">
+                                <button type="submit" class="miktar-btn">+</button>
+                            </form>
+                       </div>
+                        <form method="post" class="sil" style="display:inline;">
                             <input type="hidden" name="index" value="<?php echo $index; ?>">
                             <button type="submit" name="sil" class="sil-btn">Sil</button>
                         </form>

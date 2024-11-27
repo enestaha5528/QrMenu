@@ -195,7 +195,9 @@ $urun_result = $conn->query($urun_query);
             a{
                 font-size:10px
             }
-
+            body{
+                padding:0;
+            }
         }
     </style>
 </head>

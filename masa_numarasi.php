@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['masa_numarasi'])) {
         }
 
         input[type="number"] {
-            width: 100%;
+            width: 94%;
             padding: 12px;
             border-radius: 5px;
             border: 1px solid white;

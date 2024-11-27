@@ -18,12 +18,15 @@ $limit = 30;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $offset = ($page - 1) * $limit;
 
+$sortBy = isset($_GET['sort']) ? $_GET['sort'] : 'siparis_tarihi'; // varsayılan sıralama siparis_tarihi
+$order = isset($_GET['order']) && $_GET['order'] === 'asc' ? 'ASC' : 'DESC'; // varsayılan sıralama DESC
+
 $totalLogsQuery = "SELECT COUNT(*) FROM siparis_log";
 $totalLogsStmt = $pdo->query($totalLogsQuery);
 $totalLogs = $totalLogsStmt->fetchColumn();
 $totalPages = ceil($totalLogs / $limit); 
 
-$logQuery = "SELECT * FROM siparis_log ORDER BY siparis_tarihi DESC LIMIT :limit OFFSET :offset";
+$logQuery = "SELECT * FROM siparis_log ORDER BY $sortBy $order LIMIT :limit OFFSET :offset";
 $logsStmt = $pdo->prepare($logQuery);
 $logsStmt->bindValue(':limit', $limit, PDO::PARAM_INT);
 $logsStmt->bindValue(':offset', $offset, PDO::PARAM_INT);
@@ -163,12 +166,88 @@ $enFazlaSiparis = $enFazlaSiparisStmt->fetch(PDO::FETCH_ASSOC);
             background-color: #444;
             font-weight: bold;
         }
+        form {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        form label {
+            font-size: 1em;
+            color: #f0f0f0;
+        }
+
+        form select, form button {
+            padding: 10px;
+            background-color: #444;
+            color: #f0f0f0;
+            border: 1px solid #555;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: background-color 0.3s;
+        }
+
+        form button {
+            cursor: pointer;
+        }
+
+        form select:hover, form button:hover {
+            background-color: #555;
+        }
+
+        form select:focus, form button:focus {
+            outline: none;
+            background-color: #666;
+        }
+
+        .pagination {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .pagination a {
+            display: inline-block;
+            margin: 0 5px;
+            padding: 10px 15px;
+            color: #f0f0f0;
+            background-color: #333;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .pagination a:hover {
+            background-color: #555;
+        }
+
+        .pagination .active {
+            background-color: #444;
+            font-weight: bold;
+        }
         @media only screen and (max-width: 767px) {
             table, th, td {
                 font-size: 0.9em;
+                padding:5px;
+            }
+            body{
+                padding:0;
             }
             a{
                 font-size:10px
+            }
+            .box{
+                padding:5px;
+            }
+            form {
+                flex-direction: column; 
+                gap: 5px;
+            }
+
+            form label, form select, form button {
+                width: 100%;
+                font-size: 0.9em;
             }
 
         }
@@ -218,9 +297,28 @@ $enFazlaSiparis = $enFazlaSiparisStmt->fetch(PDO::FETCH_ASSOC);
 
         <div class="box">
             <h2>Tüm Siparişler</h2>
+            <form method="get" action="siparis_log.php">
+                <label for="sort">Sıralama:</label>
+                <select name="sort" id="sort">
+                    <option value="id" <?php if ($sortBy === 'id') echo 'selected'; ?>>ID'ye Göre</option>
+                    <option value="masa_numarasi" <?php if ($sortBy === 'masa_numarasi') echo 'selected'; ?>>Masa Numarasına Göre</option>
+                    <option value="siparis_tarihi" <?php if ($sortBy === 'siparis_tarihi') echo 'selected'; ?>>Sipariş Tarihine Göre</option>
+                    <option value="urun_fiyat" <?php if ($sortBy === 'urun_fiyat') echo 'selected'; ?>>Ürünün Fiyatına Göre</option>
+                    <option value="urun_ad" <?php if ($sortBy === 'urun_ad') echo 'selected'; ?>>Ürünün Adına Göre</option>
+                    <option value="miktar" <?php if ($sortBy === 'miktar') echo 'selected'; ?>>Ürünün Miktarına Göre</option>
+
+                </select>
+                <select name="order" id="order">
+                    <option value="asc" <?php if ($order === 'asc') echo 'selected'; ?>>Artan</option>
+                    <option value="desc" <?php if ($order === 'desc') echo 'selected'; ?>>Azalan</option>
+                </select>
+                <button type="submit">Sırala</button>
+            </form>
+
             <table>
                 <thead>
                     <tr>
+                        <th>ID</th>
                         <th>Masa Numarası</th>
                         <th>Ürün Adı</th>
                         <th>Fiyat</th>
@@ -231,6 +329,7 @@ $enFazlaSiparis = $enFazlaSiparisStmt->fetch(PDO::FETCH_ASSOC);
                 <tbody>
                     <?php foreach ($logs as $log): ?>
                         <tr>
+                            <td><?php echo $log['id']?></td>
                             <td><?php echo $log['masa_numarasi']; ?></td>
                             <td><?php echo $log['urun_ad']; ?></td>
                             <td><?php echo $log['urun_fiyat']; ?> TL</td>
@@ -240,12 +339,31 @@ $enFazlaSiparis = $enFazlaSiparisStmt->fetch(PDO::FETCH_ASSOC);
                     <?php endforeach; ?>
                 </tbody>
             </table>
+
         </div>
 
         <div class="pagination">
-            <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-                <a href="?page=<?php echo $i; ?>" class="<?php echo $i == $page ? 'active' : ''; ?>"><?php echo $i; ?></a>
+            <?php if ($page > 1): ?>
+                <a href="?page=1&sort=<?php echo $sortBy; ?>&order=<?php echo $order; ?>">İlk</a>
+                <a href="?page=<?php echo $page - 1; ?>&sort=<?php echo $sortBy; ?>&order=<?php echo $order; ?>">Önceki</a>
+            <?php endif; ?>
+
+            <?php
+            // Sayfaların gösterileceği aralık
+            $start = max(1, $page - 1);
+            $end = min($totalPages, $page + 2);
+
+            for ($i = $start; $i <= $end; $i++): ?>
+                <a href="?page=<?php echo $i; ?>&sort=<?php echo $sortBy; ?>&order=<?php echo $order; ?>"
+                    class="<?php echo ($i === $page) ? 'active' : ''; ?>"><?php echo $i; ?></a>
             <?php endfor; ?>
+
+            <?php if ($page < $totalPages): ?>
+                <a href="?page=<?php echo $page + 1; ?>&sort=<?php echo $sortBy; ?>&order=<?php echo $order; ?>">Sonraki</a>
+                <a href="?page=<?php echo $totalPages; ?>&sort=<?php echo $sortBy; ?>&order=<?php echo $order; ?>">Son</a>
+            <?php endif; ?>
+
+
         </div>
     </div>
 </body>

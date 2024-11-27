@@ -104,6 +104,7 @@ $conn->close();
             font-weight: bold;
             font-size: 22px;
             margin-top: 20px;
+            margin-bottom:20px;
             color: white; 
         }
 
@@ -163,6 +164,13 @@ $conn->close();
             #siparisler{
                 font-size:10px;
             }
+
+            .admincont{
+                padding:5px;
+            }
+            body{
+                padding:0;
+            }
             a{
                 font-size:10px
             }
@@ -188,7 +196,7 @@ $conn->close();
         <h1>Tüm Siparişler</h1>
         <div id="siparisler"></div>
         <?php if (empty($siparisler)): ?>
-            <p>Sipariş bulunmamaktadır.</p>
+            <p></p>
         <?php endif; ?>
     </div>
 
@@ -202,25 +210,24 @@ $conn->close();
                 type: 'GET',
                 dataType: 'json',
                 success: function(response) {
-                    var siparislerHtml = '';
-                    currentSiparisCount = 0; 
-                    
+                    let siparislerHtml = '';
+                    currentSiparisCount = 0;
+
                     $.each(response, function(masa_numarasi, siparisler_listesi) {
-                        currentSiparisCount += siparisler_listesi.length; 
-                        
+                        currentSiparisCount += siparisler_listesi.length;
                         siparislerHtml += '<div class="masa-numarasi">Masa Numarası: ' + masa_numarasi + '</div>';
                         siparislerHtml += '<table>';
-                        siparislerHtml += '<tr><th>ID</th><th>Ürün Adı</th><th>Fiyat (TL)</th><th>Miktar</th><th>Toplam Fiyat (TL)</th><th>Tarih</th></tr>';
+                        siparislerHtml += '<tr><th>ID</th><th>Ürün Adı</th><th>Miktar</th><th>Fiyat (TL)</th><th>Toplam Fiyat (TL)</th><th>Tarih</th></tr>';
                         
-                        var masa_toplam_fiyat = 0;
+                        let masa_toplam_fiyat = 0;
                         $.each(siparisler_listesi, function(index, siparis) {
-                            var toplam_fiyat = siparis.urun_fiyat * siparis.miktar;
+                            const toplam_fiyat = siparis.urun_fiyat * siparis.miktar;
                             masa_toplam_fiyat += toplam_fiyat;
                             siparislerHtml += '<tr>';
                             siparislerHtml += '<td>' + siparis.id + '</td>';
                             siparislerHtml += '<td>' + siparis.urun_ad + '</td>';
-                            siparislerHtml += '<td>' + siparis.urun_fiyat + ' TL</td>';
                             siparislerHtml += '<td>' + siparis.miktar + '</td>';
+                            siparislerHtml += '<td>' + siparis.urun_fiyat + ' TL</td>';
                             siparislerHtml += '<td>' + toplam_fiyat + ' TL</td>';
                             siparislerHtml += '<td>' + (siparis.created_at || 'Tarih mevcut değil') + '</td>';
                             siparislerHtml += '</tr>';
@@ -232,16 +239,18 @@ $conn->close();
                         siparislerHtml += '<button type="submit" name="siparis_tamamlandi" class="tamamla-btn">Bu Masadaki Tüm Siparişleri Tamamla</button>';
                         siparislerHtml += '</form>';
                     });
-                    $('#siparisler').html(siparislerHtml);
+
+                    $('#siparisler').html(siparislerHtml || '<p>Sipariş bulunmamaktadır.</p>');
                     lastSiparisCount = currentSiparisCount;
                 }
+                
             });
-        }
+        }   
 
         getOrders();
         setInterval(function() {
             getOrders();
-        }, 1000);
+        }, 10000);
     </script>
 </body>
 </html>

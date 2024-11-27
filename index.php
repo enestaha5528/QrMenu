@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="img/enes.png" type="image/x-icon" />
+    <link rel="icon" href="img/enesbeyaz.png" type="image/x-icon" />
     <title>Menü</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -30,7 +30,7 @@
 <body>
     <div class="menu-container">
         <div class="menu-header">
-            <img src="img/enes.png" alt="Logo" class="menu-logo">
+            <img src="img/enesbeyaz.png" alt="Logo" class="menu-logo">
             <h1>MENÜ</h1>
         </div>
 
@@ -114,7 +114,29 @@
             window.location.href = 'sepet.php'; 
        }
     </script>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-analytics.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
 
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+            apiKey: "AIzaSyAReQEq09mAFplYrFT_gZYX0_culWHENFY",
+            authDomain: "qrmenu-fc2d5.firebaseapp.com",
+            projectId: "qrmenu-fc2d5",
+            storageBucket: "qrmenu-fc2d5.firebasestorage.app",
+            messagingSenderId: "1072158604194",
+            appId: "1:1072158604194:web:95fdc3601859777f9790fb",
+            measurementId: "G-FY5WYR6CDE"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+    </script>
     <?php
     $conn->close();
     ?>
